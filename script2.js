@@ -43,14 +43,13 @@ function formatWeatherDate(dateString) {
   
   // Safe date construction normalization
   const parsedDate = new Date(dateString.replace(/-/g, "/"));
-  
-  if (isNaN(parsedDate)) return dateString; // String structure parsing fallback
+  if (isNaN(parsedDate)) return dateString; 
   
   return `${weekday[parsedDate.getDay()]} ${months[parsedDate.getMonth()]} ${parsedDate.getDate()}`;
 }
 
 function fetchWeatherData() {
-  // Fade out structure animations active configuration trigger
+  // Briefly fade app for visual reload feedback
   app.style.opacity = "0.3";
 
   // Use HTTPS to prevent browser origin mixed-content blocking policies
@@ -65,36 +64,41 @@ function fetchWeatherData() {
       // Inject standard values metrics
       temp.innerHTML = Math.round(data.current.temp_c) + "&#176;";
       conditionOutput.innerHTML = data.current.condition.text.toUpperCase();
-      if(conditionDetail) conditionDetail.innerHTML = data.current.condition.text;
+      if (conditionDetail) {
+          conditionDetail.innerHTML = data.current.condition.text;
+      }
       
       nameOutput.innerHTML = data.location.name.toUpperCase();
       
-      // Split date text array index structures cleanly
+      // Split date text cleanly
       const localDateTime = data.location.localtime; // Format: "YYYY-MM-DD HH:MM"
-      const timeParts = localDateTime.split(" ")[1];
+      const timeParts = localDateTime.split(" ")[1] || localDateTime;
       
       timeOutput.innerHTML = timeParts;
-      dateOutput.innerHTML = formatWeatherDate(localDateTime.split(" ")[0]);
+      dateOutput.innerHTML = formatWeatherDate(localDateTime);
 
-      // Direct Content Network Delivery address injection handling icon updates securely
+      // Direct CDN injection handling icon updates securely
       icon.src = "https:" + data.current.condition.icon;
 
       cloudOutput.innerHTML = data.current.cloud + "%";
       humidityOutput.innerHTML = data.current.humidity + "%";
       windOutput.innerHTML = data.current.wind_kph + " km/h";
 
-      // Background rendering selection conditional algorithm structure logic
+      // Background rendering selection algorithm structure logic
       let timeOfDay = data.current.is_day ? "day" : "night";
       const code = data.current.condition.code;
 
-      // Handle custom local path matching parameters 
+      // Grouped condition lists to match your image options (Fixed missing loop metrics)
+      const cloudyCodes = [1003, 1006, 1009, 1030, 1069, 1087, 1135, 1273, 1276, 1279, 1282];
+      const rainyCodes = [1063, 1069, 1072, 1150, 1153, 1180, 1183, 1186, 1189, 1192, 1195, 1204, 1207, 1240, 1243, 1246, 1249, 1252];
+
       if (code === 1000) {
         app.style.backgroundImage = `url('./weatherproject/weather1.jpg')`;
         btn.style.background = timeOfDay === "night" ? "#181e27" : "#e5ba92";
-      } else if ([1003, 1006, 1009, 1030, 1069, 1087, 1135, 1273, 1276, 1279, 1282].includes(code)) {
+      } else if (cloudyCodes.includes(code)) {
         app.style.backgroundImage = `url('./weatherproject/weather3.jpg')`;
         btn.style.background = timeOfDay === "night" ? "#181e27" : "#fa6d1b";
-      } else if ([1063, 1072, 1150, 1153, 1180, 1183, 1186, 1189, 1192, 1195, 1204, 1207, 1240, 1243, 1246, 1249, 1252].includes(code)) {
+      } else if (rainyCodes.includes(code)) {
         app.style.backgroundImage = `url('./weatherproject/weather2.jpg')`;
         btn.style.background = timeOfDay === "night" ? "#325c80" : "#647d75";
       } else {
@@ -107,7 +111,7 @@ function fetchWeatherData() {
     })
     .catch((error) => {
       console.error(error);
-      alert(`Could not retrieve data for "${cityInput}". Please double-check spelling or network connection.`);
+      alert(`Could not retrieve data for "${cityInput}". Please double-check spelling.`);
       // Bring opacity back to full view if search failures emerge 
       app.style.opacity = "1";
     });
